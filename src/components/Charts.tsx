@@ -50,7 +50,7 @@ export function RevenueBarChart({ agents }: { agents: RankingAgent[] }) {
 
 export function SuccessRevenueScatter({ agents }: { agents: RankingAgent[] }) {
   const data = agents.filter((a) => a.totalRevenue > 0).map((a) => ({
-    x: (a.successRate ?? 0) * 100,
+    x: a.successRate ?? 0,
     y: a.totalRevenue ?? 0,
     name: a.agentName,
   }));

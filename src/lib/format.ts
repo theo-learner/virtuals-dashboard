@@ -5,5 +5,5 @@ export function formatNumber(n: number): string {
 }
 
 export function formatPercent(n: number): string {
-  return (n * 100).toFixed(1) + "%";
+  return n.toFixed(1) + "%";
 }
