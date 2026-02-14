@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchRanking } from "@/lib/api";
 
 function summarizeData(agents: any[]) {
-  // Category stats
   const catMap: Record<string, { count: number; revenue: number; successSum: number; buyers: number }> = {};
   for (const a of agents) {
     const cat = a.category || "UNKNOWN";
@@ -19,7 +18,6 @@ function summarizeData(agents: any[]) {
     summary += `- ${cat}: ${s.count}개, 총 수익 ${s.revenue.toFixed(1)}, 평균 성공률 ${avgSuccess}%, 총 바이어 ${s.buyers}\n`;
   }
 
-  // Top 20
   const top = agents.slice(0, 20);
   summary += "\n## Top 20 에이전트\n";
   for (const a of top) {
@@ -36,13 +34,16 @@ const PROMPTS: Record<string, string> = {
   gap:
     "다음 데이터를 바탕으로 Virtuals 생태계에서 아직 채워지지 않은 공백(gap)을 찾아주세요. 수요는 높지만 공급이 부족한 영역, 수익성은 높지만 경쟁이 적은 카테고리, 아직 존재하지 않는 유형의 에이전트를 분석해주세요.",
   idea:
-    "분석 결과를 바탕으로 새로운 에이전트 개발 아이디어를 5개 제안해주세요. 각 아이디어는 다음 JSON 배열 형식으로만 답변하세요:\n```json\n[{\"name\": \"에이전트 이름\", \"category\": \"카테고리\", \"feature\": \"핵심 기능\", \"target\": \"타겟 사용자\", \"revenue\": \"예상 수익 모델\", \"differentiator\": \"차별화 포인트\", \"difficulty\": \"상|중|하\", \"pitch\": \"1줄 피치\"}]\n```\nJSON 배열만 출력하세요. 다른 텍스트 없이.",
+    '분석 결과를 바탕으로 새로운 에이전트 개발 아이디어를 5개 제안해주세요. 각 아이디어는 다음 JSON 배열 형식으로만 답변하세요:\n```json\n[{"name": "에이전트 이름", "category": "카테고리", "feature": "핵심 기능", "target": "타겟 사용자", "revenue": "예상 수익 모델", "differentiator": "차별화 포인트", "difficulty": "상|중|하", "pitch": "1줄 피치"}]\n```\nJSON 배열만 출력하세요. 다른 텍스트 없이.',
 };
 
 export async function POST(req: NextRequest) {
-  const authToken = process.env.OPENAI_AUTH_TOKEN;
+  const authToken = process.env.ANTHROPIC_AUTH_TOKEN;
   if (!authToken) {
-    return NextResponse.json({ error: "OPENAI_AUTH_TOKEN이 설정되지 않았습니다. .env.local에 추가해주세요." }, { status: 500 });
+    return NextResponse.json(
+      { error: "ANTHROPIC_AUTH_TOKEN이 설정되지 않았습니다. Vercel 환경변수에 추가해주세요." },
+      { status: 500 }
+    );
   }
 
   const { type } = await req.json();
@@ -55,29 +56,32 @@ export async function POST(req: NextRequest) {
     const data = summarizeData(agents);
     const prompt = `${PROMPTS[type]}\n\n${data}`;
 
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        "x-api-key": authToken,
+        "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "gpt-5.3-pro",
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 4096,
+        system: "당신은 AI 에이전트 생태계 전문 분석가입니다. 한국어로 답변하세요. 데이터 기반으로 구체적이고 실행 가능한 인사이트를 제공합니다.",
         messages: [
-          { role: "system", content: "당신은 AI 에이전트 생태계 전문 분석가입니다. 한국어로 답변하세요." },
           { role: "user", content: prompt },
         ],
-        temperature: 0.7,
-        max_tokens: 2000,
       }),
     });
 
     const json = await res.json();
     if (!res.ok) {
-      return NextResponse.json({ error: json.error?.message ?? "OpenAI API 오류" }, { status: 502 });
+      return NextResponse.json(
+        { error: json.error?.message ?? `Anthropic API 오류 (${res.status})` },
+        { status: 502 }
+      );
     }
 
-    const content = json.choices?.[0]?.message?.content ?? "";
+    const content = json.content?.[0]?.text ?? "";
     return NextResponse.json({ result: content, type });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
