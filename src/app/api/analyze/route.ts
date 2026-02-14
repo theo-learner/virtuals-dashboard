@@ -15,7 +15,7 @@ function summarizeData(agents: any[]) {
 
   let summary = "## 카테고리별 요약\n";
   for (const [cat, s] of Object.entries(catMap).sort((a, b) => b[1].revenue - a[1].revenue)) {
-    const avgSuccess = s.count ? (s.successSum / s.count * 100).toFixed(1) : "0";
+    const avgSuccess = s.count ? (s.successSum / s.count).toFixed(1) : "0";
     summary += `- ${cat}: ${s.count}개, 총 수익 ${s.revenue.toFixed(1)}, 평균 성공률 ${avgSuccess}%, 총 바이어 ${s.buyers}\n`;
   }
 
@@ -40,9 +40,9 @@ const PROMPTS: Record<string, string> = {
 };
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return NextResponse.json({ error: "OPENAI_API_KEY가 설정되지 않았습니다. .env.local에 추가해주세요." }, { status: 500 });
+  const authToken = process.env.OPENAI_AUTH_TOKEN;
+  if (!authToken) {
+    return NextResponse.json({ error: "OPENAI_AUTH_TOKEN이 설정되지 않았습니다. .env.local에 추가해주세요." }, { status: 500 });
   }
 
   const { type } = await req.json();
@@ -59,10 +59,10 @@ export async function POST(req: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-5.3-pro",
         messages: [
           { role: "system", content: "당신은 AI 에이전트 생태계 전문 분석가입니다. 한국어로 답변하세요." },
           { role: "user", content: prompt },
