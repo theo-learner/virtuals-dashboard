@@ -38,10 +38,10 @@ const PROMPTS: Record<string, string> = {
 };
 
 export async function POST(req: NextRequest) {
-  const authToken = process.env.OPENAI_AUTH_TOKEN;
+  const authToken = process.env.ANTHROPIC_AUTH_TOKEN;
   if (!authToken) {
     return NextResponse.json(
-      { error: "OPENAI_AUTH_TOKEN이 설정되지 않았습니다. Vercel 환경변수에 추가해주세요." },
+      { error: "ANTHROPIC_AUTH_TOKEN이 설정되지 않았습니다. Vercel 환경변수에 추가해주세요." },
       { status: 500 }
     );
   }
@@ -56,32 +56,33 @@ export async function POST(req: NextRequest) {
     const data = summarizeData(agents);
     const prompt = `${PROMPTS[type]}\n\n${data}`;
 
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${authToken}`,
+        "anthropic-version": "2023-06-01",
+        "anthropic-beta": "oauth-2025-04-20",
       },
       body: JSON.stringify({
-        model: "gpt-5.3-pro",
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 4096,
+        system: "당신은 AI 에이전트 생태계 전문 분석가입니다. 한국어로 답변하세요. 데이터 기반으로 구체적이고 실행 가능한 인사이트를 제공합니다.",
         messages: [
-          { role: "system", content: "당신은 AI 에이전트 생태계 전문 분석가입니다. 한국어로 답변하세요. 데이터 기반으로 구체적이고 실행 가능한 인사이트를 제공합니다." },
           { role: "user", content: prompt },
         ],
-        temperature: 0.7,
-        max_tokens: 4096,
       }),
     });
 
     const json = await res.json();
     if (!res.ok) {
       return NextResponse.json(
-        { error: json.error?.message ?? `OpenAI API 오류 (${res.status})` },
+        { error: json.error?.message ?? `Anthropic API 오류 (${res.status})` },
         { status: 502 }
       );
     }
 
-    const content = json.choices?.[0]?.message?.content ?? "";
+    const content = json.content?.[0]?.text ?? "";
     return NextResponse.json({ result: content, type });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
