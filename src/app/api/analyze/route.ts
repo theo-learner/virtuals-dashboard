@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": authToken,
+        "Authorization": `Bearer ${authToken}`,
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
