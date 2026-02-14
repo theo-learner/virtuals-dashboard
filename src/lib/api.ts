@@ -1,5 +1,5 @@
 export interface RankingAgent {
-  agentId: string;
+  agentId: string | number;
   agentName: string;
   rank: number;
   totalRevenue: number;
@@ -32,7 +32,7 @@ export interface VirtualAgent {
 export async function fetchRanking(): Promise<RankingAgent[]> {
   const res = await fetch(
     "https://api.virtuals.io/api/agdp-leaderboard-epochs/1/ranking?pagination[pageSize]=1000",
-    { next: { revalidate: 3600 } }
+    { cache: "no-store" }
   );
   const json = await res.json();
   return json.data ?? [];

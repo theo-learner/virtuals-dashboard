@@ -13,6 +13,12 @@ const categoryMap: Record<string, string> = {
   OFF_CHAIN: "오프체인",
   "IP MIRROR": "IP 미러",
   ENTERTAINMENT: "엔터테인먼트",
+  INFORMATION: "정보",
+  PRODUCTIVITY: "생산성",
+  NONE: "미분류",
+  SOCIAL: "소셜",
+  GAMING: "게임",
+  DEFI: "디파이",
 };
 
 function categoryLabel(c: string) {

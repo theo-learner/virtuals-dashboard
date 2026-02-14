@@ -2,12 +2,26 @@ import { fetchRanking, fetchVirtuals } from "@/lib/api";
 import { formatNumber, formatPercent } from "@/lib/format";
 import Link from "next/link";
 
+const categoryMap: Record<string, string> = {
+  "ON_CHAIN": "온체인",
+  "HYBRID": "하이브리드",
+  "OFF_CHAIN": "오프체인",
+  "IP MIRROR": "IP 미러",
+  "ENTERTAINMENT": "엔터테인먼트",
+  "INFORMATION": "정보",
+  "PRODUCTIVITY": "생산성",
+  "NONE": "미분류",
+  "SOCIAL": "소셜",
+  "GAMING": "게임",
+  "DEFI": "디파이",
+};
+
 export default async function AgentPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [ranking, virtuals] = await Promise.all([fetchRanking(), fetchVirtuals()]);
 
-  const agent = ranking.find((a) => a.agentId === id);
-  const virtual = virtuals.find((v) => v.id === id);
+  const agent = ranking.find((a) => String(a.agentId) === id);
+  const virtual = virtuals.find((v) => String(v.id) === id);
 
   if (!agent) {
     return (
@@ -29,9 +43,9 @@ export default async function AgentPage({ params }: { params: Promise<{ id: stri
         <div className="flex-1">
           <h1 className="text-2xl font-bold font-mono text-cyan-neon glow-cyan mb-1">{agent.agentName}</h1>
           <div className="flex flex-wrap gap-2 mb-3">
-            {agent.category && <span className="text-xs font-mono px-2 py-1 rounded bg-violet-accent/20 text-violet-accent">{agent.category}</span>}
+            {agent.category && <span className="text-xs font-mono px-2 py-1 rounded bg-violet-accent/20 text-violet-accent">{categoryMap[agent.category] ?? agent.category}</span>}
             {agent.role && <span className="text-xs font-mono px-2 py-1 rounded bg-cyan-neon/20 text-cyan-neon">{agent.role}</span>}
-            {agent.hasGraduated && <span className="text-xs font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">Graduated</span>}
+            {agent.hasGraduated && <span className="text-xs font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">졸업 완료</span>}
           </div>
           {virtual?.description && <p className="text-text-secondary text-sm leading-relaxed">{virtual.description}</p>}
           {agent.twitterHandle && (
@@ -70,7 +84,7 @@ export default async function AgentPage({ params }: { params: Promise<{ id: stri
         </div>
         <div className="glass-card p-5 text-center">
           <div className="text-xs font-mono text-text-secondary uppercase mb-2">상금 풀</div>
-          <div className="text-2xl font-bold font-mono text-cyan-neon">{((agent.prizePoolPercentage ?? 0) * 100).toFixed(2)}%</div>
+          <div className="text-2xl font-bold font-mono text-cyan-neon">{(agent.prizePoolPercentage ?? 0).toFixed(2)}%</div>
         </div>
       </div>
     </main>
