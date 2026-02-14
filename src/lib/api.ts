@@ -14,6 +14,8 @@ export interface RankingAgent {
   tokenAddress: string;
   profilePic: string;
   twitterHandle: string;
+  virtualAgentId?: string;
+  isVirtualAgent?: boolean;
 }
 
 export interface VirtualAgent {
@@ -36,6 +38,14 @@ export async function fetchRanking(): Promise<RankingAgent[]> {
   );
   const json = await res.json();
   return json.data ?? [];
+}
+
+export async function fetchAgentDetail(virtualAgentId: string) {
+  const res = await fetch(`https://api.virtuals.io/api/virtuals/${virtualAgentId}`, {
+    next: { revalidate: 3600 },
+  });
+  const json = await res.json();
+  return json.data ?? null;
 }
 
 export async function fetchVirtuals(): Promise<VirtualAgent[]> {
