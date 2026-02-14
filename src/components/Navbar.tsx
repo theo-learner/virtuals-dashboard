@@ -10,6 +10,7 @@ export default function Navbar() {
       <div className="flex gap-6 text-sm font-mono">
         <Link href="/" className="hover:text-cyan-neon transition-colors">대시보드</Link>
         <Link href="/analytics" className="hover:text-cyan-neon transition-colors">분석</Link>
+        <Link href="/insights" className="hover:text-cyan-neon transition-colors">인사이트</Link>
       </div>
     </nav>
   );
