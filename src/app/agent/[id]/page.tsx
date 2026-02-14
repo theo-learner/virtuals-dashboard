@@ -2,6 +2,7 @@ import { fetchRanking, fetchAgentDetail } from "@/lib/api";
 import { formatNumber, formatPercent } from "@/lib/format";
 import Link from "next/link";
 import { CopyButton } from "./CopyButton";
+import { TranslatedDescription } from "./TranslatedDescription";
 
 const categoryMap: Record<string, string> = {
   ON_CHAIN: "온체인",
@@ -114,7 +115,7 @@ export default async function AgentPage({ params }: { params: Promise<{ id: stri
             {level != null && <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">Lv.{level}</span>}
           </div>
           {description && (
-            <p className="text-text-primary text-base leading-relaxed bg-bg-card/50 rounded-lg p-4 border border-border/50 mb-3">{description}</p>
+            <TranslatedDescription text={description} />
           )}
           <div className="flex flex-wrap items-center gap-4">
             {(twitterUrl || agent.twitterHandle) && (
