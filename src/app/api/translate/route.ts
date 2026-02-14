@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   const authToken = process.env.ANTHROPIC_AUTH_TOKEN;
   if (!authToken) {
     return NextResponse.json({ error: "ANTHROPIC_AUTH_TOKEN 미설정" }, { status: 500 });
+  }
+
+  // Rate limit: 10 requests per minute per IP
+  const ip = getClientIp(req.headers);
+  const rl = rateLimit(`translate:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: `요청 한도 초과. ${Math.ceil(rl.resetMs / 1000)}초 후 다시 시도하세요.` },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(rl.resetMs / 1000)) } }
+    );
   }
 
   const { text } = await req.json();

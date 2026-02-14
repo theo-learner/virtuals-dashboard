@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchRanking } from "@/lib/api";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 function summarizeData(agents: any[]) {
   const catMap: Record<string, { count: number; revenue: number; successSum: number; buyers: number }> = {};
@@ -43,6 +44,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { error: "ANTHROPIC_AUTH_TOKEN이 설정되지 않았습니다. Vercel 환경변수에 추가해주세요." },
       { status: 500 }
+    );
+  }
+
+  // Rate limit: 3 requests per minute per IP
+  const ip = getClientIp(req.headers);
+  const rl = rateLimit(`analyze:${ip}`, { windowMs: 60_000, max: 3 });
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: `요청 한도 초과. ${Math.ceil(rl.resetMs / 1000)}초 후 다시 시도하세요.` },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(rl.resetMs / 1000)) } }
     );
   }
 
