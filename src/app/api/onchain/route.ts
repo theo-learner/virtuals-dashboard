@@ -12,7 +12,7 @@ async function duneExecute(sql: string): Promise<any[]> {
       "X-DUNE-API-KEY": DUNE_API_KEY!,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ query_sql: sql }),
+    body: JSON.stringify({ sql, performance: "medium" }),
   });
   const execJson = await execRes.json();
   if (!execRes.ok) throw new Error(execJson.error ?? `Dune exec failed (${execRes.status})`);
