@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchRanking } from "@/lib/api";
-import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { apiGuard, secureHeaders } from "@/lib/api-guard";
 
 function summarizeData(agents: any[]) {
   const catMap: Record<string, { count: number; revenue: number; successSum: number; buyers: number }> = {};
@@ -47,15 +47,8 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Rate limit: 3 requests per minute per IP
-  const ip = getClientIp(req.headers);
-  const rl = rateLimit(`analyze:${ip}`, { windowMs: 60_000, max: 3 });
-  if (!rl.success) {
-    return NextResponse.json(
-      { error: `요청 한도 초과. ${Math.ceil(rl.resetMs / 1000)}초 후 다시 시도하세요.` },
-      { status: 429, headers: { "Retry-After": String(Math.ceil(rl.resetMs / 1000)) } }
-    );
-  }
+  const blocked = apiGuard(req, "analyze");
+  if (blocked) return blocked;
 
   const { type } = await req.json();
   if (!PROMPTS[type]) {
@@ -94,7 +87,7 @@ export async function POST(req: NextRequest) {
     }
 
     const content = json.content?.[0]?.text ?? "";
-    return NextResponse.json({ result: content, type });
+    return secureHeaders(NextResponse.json({ result: content, type }), "analyze");
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { apiGuard, secureHeaders } from "@/lib/api-guard";
 
 export async function POST(req: NextRequest) {
   const authToken = process.env.ANTHROPIC_AUTH_TOKEN;
@@ -7,15 +7,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "ANTHROPIC_AUTH_TOKEN 미설정" }, { status: 500 });
   }
 
-  // Rate limit: 10 requests per minute per IP
-  const ip = getClientIp(req.headers);
-  const rl = rateLimit(`translate:${ip}`, { windowMs: 60_000, max: 10 });
-  if (!rl.success) {
-    return NextResponse.json(
-      { error: `요청 한도 초과. ${Math.ceil(rl.resetMs / 1000)}초 후 다시 시도하세요.` },
-      { status: 429, headers: { "Retry-After": String(Math.ceil(rl.resetMs / 1000)) } }
-    );
-  }
+  const blocked = apiGuard(req, "translate");
+  if (blocked) return blocked;
 
   const { text } = await req.json();
   if (!text || typeof text !== "string") {
@@ -50,7 +43,7 @@ export async function POST(req: NextRequest) {
     }
 
     const result = json.content?.[0]?.text ?? text;
-    return NextResponse.json({ result });
+    return secureHeaders(NextResponse.json({ result }), "translate");
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { apiGuard, secureHeaders } from "@/lib/api-guard";
 
 const DUNE_API_KEY = process.env.DUNE_API_KEY;
 const DUNE_BASE = "https://api.dune.com/api/v1";
@@ -45,15 +45,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "DUNE_API_KEY 미설정" }, { status: 500 });
   }
 
-  // Rate limit: 3 requests per minute per IP
-  const ip = getClientIp(req.headers);
-  const rl = rateLimit(`onchain:${ip}`, { windowMs: 60_000, max: 3 });
-  if (!rl.success) {
-    return NextResponse.json(
-      { error: `요청 한도 초과. ${Math.ceil(rl.resetMs / 1000)}초 후 다시 시도하세요.` },
-      { status: 429, headers: { "Retry-After": String(Math.ceil(rl.resetMs / 1000)) } }
-    );
-  }
+  const blocked = apiGuard(req, "onchain");
+  if (blocked) return blocked;
 
   try {
     // VIRTUAL token daily stats (30 days)

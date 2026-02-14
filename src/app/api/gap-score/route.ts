@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { fetchRanking } from "@/lib/api";
+import { apiGuard, secureHeaders } from "@/lib/api-guard";
 
 export interface CategoryScore {
   category: string;
@@ -34,7 +35,10 @@ const categoryKoMap: Record<string, string> = {
   NONE: "미분류",
 };
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const blocked = apiGuard(req, "gap-score");
+  if (blocked) return blocked;
+
   try {
     const agents = await fetchRanking();
     if (!agents.length) {
