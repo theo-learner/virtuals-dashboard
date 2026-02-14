@@ -23,7 +23,7 @@ function summarizeData(agents: any[]) {
   const top = agents.slice(0, 20);
   summary += "\n## Top 20 에이전트\n";
   for (const a of top) {
-    summary += `${a.rank}. ${a.agentName} — 수익: ${a.totalRevenue?.toFixed(1)}, 성공률: ${((a.successRate ?? 0) * 100).toFixed(1)}%, 바이어: ${a.uniqueBuyerCount}, 카테고리: ${a.category}, 역할: ${a.role}\n`;
+    summary += `${a.rank}. ${a.agentName} — 수익: ${a.totalRevenue?.toFixed(1)}, 성공률: ${(a.successRate ?? 0).toFixed(1)}%, 바이어: ${a.uniqueBuyerCount}, 카테고리: ${a.category}, 역할: ${a.role}\n`;
   }
 
   summary += `\n총 에이전트 수: ${agents.length}\n`;
