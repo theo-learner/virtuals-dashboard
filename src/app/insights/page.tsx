@@ -495,6 +495,185 @@ function GapScoreSection() {
   );
 }
 
+interface OnchainDay {
+  day: string;
+  transfers: number;
+  unique_senders: number;
+  unique_receivers: number;
+  volume: number;
+}
+
+interface OnchainSummary {
+  totalVolume: number;
+  totalTransfers: number;
+  avgDailyVolume: number;
+  avgDailySenders: number;
+  volumeTrend7d: number;
+  senderTrend7d: number;
+  days: number;
+}
+
+function TrendBadge({ value, label }: { value: number; label: string }) {
+  const positive = value >= 0;
+  return (
+    <div className={`flex items-center gap-1 text-xs font-mono ${positive ? "text-green-400" : "text-red-400"}`}>
+      <span>{positive ? "▲" : "▼"}</span>
+      <span>{Math.abs(value).toFixed(1)}%</span>
+      <span className="text-text-secondary ml-1">{label}</span>
+    </div>
+  );
+}
+
+function MiniChart({ data, dataKey }: { data: OnchainDay[]; dataKey: "volume" | "transfers" | "unique_senders" }) {
+  if (!data.length) return null;
+  const values = data.map((d) => d[dataKey]);
+  const max = Math.max(...values);
+  const barW = Math.max(4, Math.floor(300 / data.length) - 1);
+
+  return (
+    <div className="flex items-end gap-[1px] h-16">
+      {values.map((v, i) => {
+        const h = max > 0 ? (v / max) * 100 : 0;
+        const isLast7 = i >= data.length - 7;
+        return (
+          <div
+            key={i}
+            className={`rounded-t-sm transition-all ${isLast7 ? "bg-cyan-neon/70" : "bg-cyan-neon/25"}`}
+            style={{ width: `${barW}px`, height: `${h}%`, minHeight: "2px" }}
+            title={`${data[i].day?.slice(0, 10)}: ${v.toLocaleString()}`}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function OnchainSection() {
+  const [data, setData] = useState<{ daily: OnchainDay[]; summary: OnchainSummary } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function run() {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/onchain");
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      setData(json);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <section className="glass-card p-6 mb-6 border border-border hover:border-cyan-neon/20 transition-all">
+      <div className="flex items-start justify-between mb-2">
+        <div>
+          <h2 className="text-lg font-bold font-mono flex items-center gap-2">
+            <span className="text-2xl">⛓️</span>
+            <span className="text-cyan-neon">온체인 데이터</span>
+          </h2>
+          <p className="text-text-secondary text-xs font-mono mt-1 ml-9">
+            Dune Analytics — VIRTUAL 토큰 30일 온체인 활동 (거래량, 전송 수, 참여자)
+          </p>
+        </div>
+        <button
+          onClick={run}
+          disabled={loading}
+          className="px-5 py-2.5 rounded-lg font-mono text-sm bg-gradient-to-r from-cyan-neon/20 to-violet-accent/20 border border-cyan-neon/40 text-cyan-neon hover:from-cyan-neon/30 hover:to-violet-accent/30 hover:shadow-[0_0_20px_rgba(0,255,209,0.2)] transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+        >
+          {loading ? "조회 중..." : "온체인 조회"}
+        </button>
+      </div>
+
+      {loading && (
+        <div className="mt-4 p-4 bg-black/40 rounded-lg border border-cyan-neon/10">
+          <div className="flex items-center gap-3">
+            <div className="relative w-8 h-8">
+              <div className="absolute inset-0 border-2 border-cyan-neon/30 rounded-full" />
+              <div className="absolute inset-0 border-2 border-cyan-neon border-t-transparent rounded-full animate-spin" />
+            </div>
+            <div>
+              <p className="text-cyan-neon font-mono text-sm">Dune Analytics에서 데이터를 가져오는 중...</p>
+              <p className="text-text-secondary font-mono text-xs mt-0.5">Base 체인 온체인 쿼리 실행 중 (약 10~20초 소요)</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+          <p className="text-red-400 text-sm font-mono">⚠️ 오류: {error}</p>
+        </div>
+      )}
+
+      {data && (
+        <div className="mt-5">
+          {/* Summary KPIs */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            <div className="p-4 bg-black/30 rounded-lg border border-border/30">
+              <div className="text-xs font-mono text-text-secondary mb-1">30일 총 거래량</div>
+              <div className="text-xl font-bold font-mono text-cyan-neon">{data.summary.totalVolume.toLocaleString()}</div>
+              <TrendBadge value={data.summary.volumeTrend7d} label="7d" />
+            </div>
+            <div className="p-4 bg-black/30 rounded-lg border border-border/30">
+              <div className="text-xs font-mono text-text-secondary mb-1">총 전송 수</div>
+              <div className="text-xl font-bold font-mono text-violet-accent">{data.summary.totalTransfers.toLocaleString()}</div>
+            </div>
+            <div className="p-4 bg-black/30 rounded-lg border border-border/30">
+              <div className="text-xs font-mono text-text-secondary mb-1">일평균 거래량</div>
+              <div className="text-xl font-bold font-mono text-cyan-neon">{data.summary.avgDailyVolume.toLocaleString()}</div>
+            </div>
+            <div className="p-4 bg-black/30 rounded-lg border border-border/30">
+              <div className="text-xs font-mono text-text-secondary mb-1">일평균 참여자</div>
+              <div className="text-xl font-bold font-mono text-violet-accent">{data.summary.avgDailySenders.toLocaleString()}</div>
+              <TrendBadge value={data.summary.senderTrend7d} label="7d" />
+            </div>
+          </div>
+
+          {/* Mini Charts */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="p-4 bg-black/20 rounded-lg border border-border/20">
+              <div className="text-xs font-mono text-text-secondary mb-3">일별 거래량 (VIRTUAL)</div>
+              <MiniChart data={data.daily} dataKey="volume" />
+              <div className="flex justify-between text-[10px] font-mono text-text-secondary mt-1">
+                <span>{data.daily[0]?.day?.slice(5, 10)}</span>
+                <span className="text-cyan-neon">최근 7일 강조</span>
+                <span>{data.daily[data.daily.length - 1]?.day?.slice(5, 10)}</span>
+              </div>
+            </div>
+            <div className="p-4 bg-black/20 rounded-lg border border-border/20">
+              <div className="text-xs font-mono text-text-secondary mb-3">일별 전송 수</div>
+              <MiniChart data={data.daily} dataKey="transfers" />
+              <div className="flex justify-between text-[10px] font-mono text-text-secondary mt-1">
+                <span>{data.daily[0]?.day?.slice(5, 10)}</span>
+                <span></span>
+                <span>{data.daily[data.daily.length - 1]?.day?.slice(5, 10)}</span>
+              </div>
+            </div>
+            <div className="p-4 bg-black/20 rounded-lg border border-border/20">
+              <div className="text-xs font-mono text-text-secondary mb-3">일별 고유 전송자</div>
+              <MiniChart data={data.daily} dataKey="unique_senders" />
+              <div className="flex justify-between text-[10px] font-mono text-text-secondary mt-1">
+                <span>{data.daily[0]?.day?.slice(5, 10)}</span>
+                <span></span>
+                <span>{data.daily[data.daily.length - 1]?.day?.slice(5, 10)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-[10px] font-mono text-text-secondary text-right">
+            데이터 소스: Dune Analytics · Base Chain · VIRTUAL (0x0b3e...7E1b)
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
 export default function InsightsPage() {
   return (
     <main>
@@ -507,9 +686,11 @@ export default function InsightsPage() {
           </span>
         </h1>
         <p className="text-text-secondary text-sm font-mono mt-2 ml-12">
-          정량 데이터 분석 + AI가 에이전트 생태계의 기회를 발견합니다
+          온체인 데이터 + 정량 분석 + AI가 에이전트 생태계의 기회를 발견합니다
         </p>
       </div>
+
+      <OnchainSection />
 
       <GapScoreSection />
 
