@@ -3,13 +3,13 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
-  title: "Virtuals aGDP Dashboard",
-  description: "Virtuals Protocol aGDP Leaderboard & Analytics",
+  title: "버추얼스 프로토콜 대시보드",
+  description: "버추얼스 프로토콜 aGDP 리더보드 & 분석",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

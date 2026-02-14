@@ -15,7 +15,7 @@ export function CategoryPieChart({ agents }: { agents: RankingAgent[] }) {
 
   return (
     <div className="glass-card p-5">
-      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">Agents by Category</h3>
+      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">카테고리 분포</h3>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label={((props: Record<string, unknown>) => `${props.name ?? ""} ${(((props.percent as number) ?? 0) * 100).toFixed(0)}%`) as never} labelLine={false} fontSize={11}>
@@ -34,7 +34,7 @@ export function RevenueBarChart({ agents }: { agents: RankingAgent[] }) {
 
   return (
     <div className="glass-card p-5">
-      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">Top 20 Revenue</h3>
+      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">수익 상위 20</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
@@ -57,12 +57,12 @@ export function SuccessRevenueScatter({ agents }: { agents: RankingAgent[] }) {
 
   return (
     <div className="glass-card p-5">
-      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">Success Rate vs Revenue</h3>
+      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">성공률 vs 수익</h3>
       <ResponsiveContainer width="100%" height={300}>
         <ScatterChart>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-          <XAxis dataKey="x" name="Success %" tick={{ fontSize: 10, fill: "#94a3b8" }} />
-          <YAxis dataKey="y" name="Revenue" tick={{ fontSize: 10, fill: "#94a3b8" }} />
+          <XAxis dataKey="x" name="성공률 %" tick={{ fontSize: 10, fill: "#94a3b8" }} />
+          <YAxis dataKey="y" name="수익" tick={{ fontSize: 10, fill: "#94a3b8" }} />
           <Tooltip contentStyle={{ background: "#0a0a0f", border: "1px solid rgba(139,92,246,0.3)", borderRadius: 8, fontFamily: "monospace", fontSize: 12 }} cursor={{ strokeDasharray: "3 3" }} />
           <Scatter data={data} fill="#8B5CF6" />
         </ScatterChart>
@@ -78,7 +78,7 @@ export function RoleDistribution({ agents }: { agents: RankingAgent[] }) {
 
   return (
     <div className="glass-card p-5">
-      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">Role Distribution</h3>
+      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">역할 분포</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />

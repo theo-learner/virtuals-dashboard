@@ -7,7 +7,7 @@ export default async function AnalyticsPage() {
   return (
     <main>
       <h1 className="text-2xl font-bold font-mono mb-6">
-        <span className="text-cyan-neon glow-cyan">Analytics</span>
+        <span className="text-cyan-neon glow-cyan">분석</span>
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <CategoryPieChart agents={agents} />

@@ -12,15 +12,15 @@ export default async function AgentPage({ params }: { params: Promise<{ id: stri
   if (!agent) {
     return (
       <main className="text-center py-20">
-        <h1 className="text-2xl font-mono text-text-secondary">Agent not found</h1>
-        <Link href="/" className="text-cyan-neon font-mono text-sm mt-4 inline-block">← Back</Link>
+        <h1 className="text-2xl font-mono text-text-secondary">에이전트를 찾을 수 없습니다</h1>
+        <Link href="/" className="text-cyan-neon font-mono text-sm mt-4 inline-block">← 돌아가기</Link>
       </main>
     );
   }
 
   return (
     <main>
-      <Link href="/" className="text-cyan-neon font-mono text-sm mb-6 inline-block hover:underline">← Back to Dashboard</Link>
+      <Link href="/" className="text-cyan-neon font-mono text-sm mb-6 inline-block hover:underline">← 대시보드로 돌아가기</Link>
 
       <div className="glass-card p-6 mb-6 flex flex-col sm:flex-row items-start gap-6">
         {agent.profilePic && (
@@ -45,31 +45,31 @@ export default async function AgentPage({ params }: { params: Promise<{ id: stri
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="glass-card p-5 text-center">
-          <div className="text-xs font-mono text-text-secondary uppercase mb-2">Rank</div>
+          <div className="text-xs font-mono text-text-secondary uppercase mb-2">순위</div>
           <div className="text-3xl font-bold font-mono text-violet-accent glow-violet">#{agent.rank}</div>
         </div>
         <div className="glass-card p-5 text-center">
-          <div className="text-xs font-mono text-text-secondary uppercase mb-2">Revenue</div>
+          <div className="text-xs font-mono text-text-secondary uppercase mb-2">수익</div>
           <div className="text-2xl font-bold font-mono text-cyan-neon">{formatNumber(agent.totalRevenue ?? 0)}</div>
         </div>
         <div className="glass-card p-5 text-center">
-          <div className="text-xs font-mono text-text-secondary uppercase mb-2">Success Rate</div>
+          <div className="text-xs font-mono text-text-secondary uppercase mb-2">성공률</div>
           <div className="text-2xl font-bold font-mono text-cyan-neon">{formatPercent(agent.successRate ?? 0)}</div>
         </div>
         <div className="glass-card p-5 text-center">
-          <div className="text-xs font-mono text-text-secondary uppercase mb-2">Buyers</div>
+          <div className="text-xs font-mono text-text-secondary uppercase mb-2">바이어</div>
           <div className="text-2xl font-bold font-mono">{agent.uniqueBuyerCount ?? 0}</div>
         </div>
         <div className="glass-card p-5 text-center">
-          <div className="text-xs font-mono text-text-secondary uppercase mb-2">Rating</div>
+          <div className="text-xs font-mono text-text-secondary uppercase mb-2">평점</div>
           <div className="text-2xl font-bold font-mono text-violet-accent">{(agent.rating ?? 0).toFixed(1)}</div>
         </div>
         <div className="glass-card p-5 text-center">
-          <div className="text-xs font-mono text-text-secondary uppercase mb-2">Jobs Done</div>
+          <div className="text-xs font-mono text-text-secondary uppercase mb-2">완료 작업</div>
           <div className="text-2xl font-bold font-mono">{agent.successfulJobCount ?? 0}</div>
         </div>
         <div className="glass-card p-5 text-center">
-          <div className="text-xs font-mono text-text-secondary uppercase mb-2">Prize Pool</div>
+          <div className="text-xs font-mono text-text-secondary uppercase mb-2">상금 풀</div>
           <div className="text-2xl font-bold font-mono text-cyan-neon">{((agent.prizePoolPercentage ?? 0) * 100).toFixed(2)}%</div>
         </div>
       </div>

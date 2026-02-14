@@ -41,7 +41,7 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
     <div className="glass-card p-5">
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <input
-          placeholder="Search agents..."
+          placeholder="에이전트 검색..."
           className="bg-black/40 border border-border rounded-lg px-3 py-2 text-sm font-mono flex-1 focus:outline-none focus:border-cyan-neon"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -51,7 +51,7 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
-          <option value="">All Categories</option>
+          <option value="">전체 카테고리</option>
           {categories.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
       </div>
@@ -59,12 +59,12 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
         <table className="w-full text-sm font-mono">
           <thead className="text-text-secondary text-xs uppercase border-b border-border">
             <tr>
-              <th className="px-3 py-2 text-left">#</th>
-              <th className="px-3 py-2 text-left">Agent</th>
-              {hdr("Revenue", "totalRevenue")}
-              {hdr("Success", "successRate")}
-              {hdr("Buyers", "uniqueBuyerCount")}
-              {hdr("Rating", "rating")}
+              <th className="px-3 py-2 text-left">순위</th>
+              <th className="px-3 py-2 text-left">에이전트</th>
+              {hdr("수익", "totalRevenue")}
+              {hdr("성공률", "successRate")}
+              {hdr("바이어", "uniqueBuyerCount")}
+              {hdr("평점", "rating")}
             </tr>
           </thead>
           <tbody>
