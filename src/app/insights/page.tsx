@@ -286,6 +286,215 @@ function IdeaCards({ result }: { result: string }) {
   );
 }
 
+interface GapCategory {
+  category: string;
+  categoryKo: string;
+  agentCount: number;
+  totalRevenue: number;
+  avgRevenue: number;
+  avgSuccessRate: number;
+  avgBuyers: number;
+  totalBuyers: number;
+  avgRating: number;
+  topAgent: string;
+  gapScore: number;
+  revenuePerAgent: number;
+  competitionIndex: number;
+  demandIndex: number;
+  signals: string[];
+}
+
+interface GapMeta {
+  totalAgents: number;
+  totalRevenue: number;
+  totalBuyers: number;
+  avgRevenueGlobal: number;
+  avgBuyersGlobal: number;
+  updatedAt: string;
+}
+
+function GapScoreBar({ value, max, color }: { value: number; max: number; color: string }) {
+  const pct = Math.min(100, (value / Math.max(1, max)) * 100);
+  return (
+    <div className="h-2 bg-black/40 rounded-full overflow-hidden">
+      <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%`, transition: "width 0.5s ease" }} />
+    </div>
+  );
+}
+
+function GapScoreSection() {
+  const [data, setData] = useState<{ categories: GapCategory[]; meta: GapMeta } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function run() {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/gap-score");
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      setData(json);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const maxGap = data ? Math.max(...data.categories.map((c) => c.gapScore)) : 1;
+
+  return (
+    <section className="glass-card p-6 mb-6 border border-border hover:border-cyan-neon/20 transition-all">
+      <div className="flex items-start justify-between mb-2">
+        <div>
+          <h2 className="text-lg font-bold font-mono flex items-center gap-2">
+            <span className="text-2xl">📊</span>
+            <span className="text-cyan-neon">정량 Gap Score</span>
+          </h2>
+          <p className="text-text-secondary text-xs font-mono mt-1 ml-9">
+            수요/경쟁 비율 기반 정량 분석 — LLM 없이 순수 데이터로 기회 영역을 스코어링합니다
+          </p>
+        </div>
+        <button
+          onClick={run}
+          disabled={loading}
+          className="px-5 py-2.5 rounded-lg font-mono text-sm bg-gradient-to-r from-cyan-neon/20 to-violet-accent/20 border border-cyan-neon/40 text-cyan-neon hover:from-cyan-neon/30 hover:to-violet-accent/30 hover:shadow-[0_0_20px_rgba(0,255,209,0.2)] transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+        >
+          {loading ? "계산 중..." : "Gap Score 산출"}
+        </button>
+      </div>
+
+      {error && (
+        <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+          <p className="text-red-400 text-sm font-mono">⚠️ 오류: {error}</p>
+        </div>
+      )}
+
+      {data && (
+        <div className="mt-5">
+          {/* Meta summary */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            <div className="p-3 bg-black/30 rounded-lg text-center border border-border/30">
+              <div className="text-xs font-mono text-text-secondary">총 에이전트</div>
+              <div className="text-xl font-bold font-mono text-cyan-neon">{data.meta.totalAgents}</div>
+            </div>
+            <div className="p-3 bg-black/30 rounded-lg text-center border border-border/30">
+              <div className="text-xs font-mono text-text-secondary">총 수익 (VIRTUAL)</div>
+              <div className="text-xl font-bold font-mono text-cyan-neon">{data.meta.totalRevenue.toLocaleString()}</div>
+            </div>
+            <div className="p-3 bg-black/30 rounded-lg text-center border border-border/30">
+              <div className="text-xs font-mono text-text-secondary">총 바이어</div>
+              <div className="text-xl font-bold font-mono text-violet-accent">{data.meta.totalBuyers.toLocaleString()}</div>
+            </div>
+            <div className="p-3 bg-black/30 rounded-lg text-center border border-border/30">
+              <div className="text-xs font-mono text-text-secondary">분석 시각</div>
+              <div className="text-sm font-mono text-text-primary mt-1">{new Date(data.meta.updatedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })}</div>
+            </div>
+          </div>
+
+          {/* Category cards sorted by gap score */}
+          <div className="space-y-4">
+            {data.categories.map((cat, i) => (
+              <div
+                key={cat.category}
+                className={`p-5 rounded-lg border transition-all ${
+                  i === 0
+                    ? "bg-gradient-to-r from-cyan-neon/10 to-violet-accent/10 border-cyan-neon/40 shadow-[0_0_20px_rgba(0,255,209,0.1)]"
+                    : i < 3
+                    ? "bg-black/30 border-cyan-neon/20"
+                    : "bg-black/20 border-border/30"
+                }`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-sm ${
+                      i === 0 ? "bg-cyan-neon/20 text-cyan-neon" : i < 3 ? "bg-violet-accent/20 text-violet-accent" : "bg-white/10 text-text-secondary"
+                    }`}>
+                      {i + 1}
+                    </div>
+                    <div>
+                      <h3 className="font-bold font-mono text-text-primary">{cat.categoryKo}</h3>
+                      <span className="text-xs font-mono text-text-secondary">{cat.category} · {cat.agentCount}개 에이전트</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`text-2xl font-bold font-mono ${i === 0 ? "text-cyan-neon glow-cyan" : i < 3 ? "text-violet-accent" : "text-text-primary"}`}>
+                      {cat.gapScore.toFixed(2)}
+                    </div>
+                    <div className="text-[10px] font-mono text-text-secondary uppercase">Gap Score</div>
+                  </div>
+                </div>
+
+                {/* Score bars */}
+                <div className="grid grid-cols-2 gap-x-6 gap-y-2 mb-3">
+                  <div>
+                    <div className="flex justify-between text-[10px] font-mono text-text-secondary mb-1">
+                      <span>수요 지수</span>
+                      <span className="text-cyan-neon">{cat.demandIndex.toFixed(1)}</span>
+                    </div>
+                    <GapScoreBar value={cat.demandIndex} max={100} color="bg-gradient-to-r from-cyan-neon/60 to-cyan-neon" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-[10px] font-mono text-text-secondary mb-1">
+                      <span>경쟁 지수</span>
+                      <span className="text-red-400">{cat.competitionIndex.toFixed(1)}</span>
+                    </div>
+                    <GapScoreBar value={cat.competitionIndex} max={100} color="bg-gradient-to-r from-red-500/60 to-red-400" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-[10px] font-mono text-text-secondary mb-1">
+                      <span>평균 수익</span>
+                      <span>{cat.avgRevenue.toLocaleString()}</span>
+                    </div>
+                    <GapScoreBar value={cat.avgRevenue} max={Math.max(...data.categories.map(c => c.avgRevenue))} color="bg-gradient-to-r from-violet-accent/60 to-violet-accent" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-[10px] font-mono text-text-secondary mb-1">
+                      <span>평균 성공률</span>
+                      <span>{cat.avgSuccessRate.toFixed(1)}%</span>
+                    </div>
+                    <GapScoreBar value={cat.avgSuccessRate} max={100} color="bg-gradient-to-r from-green-500/60 to-green-400" />
+                  </div>
+                </div>
+
+                {/* Signals */}
+                {cat.signals.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {cat.signals.map((s, j) => (
+                      <span key={j} className="text-xs px-2 py-1 rounded-lg bg-black/40 border border-border/30 text-text-primary font-mono">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Bottom row */}
+                <div className="flex items-center justify-between text-xs font-mono text-text-secondary mt-2 pt-2 border-t border-border/20">
+                  <span>총 바이어: {cat.totalBuyers.toLocaleString()}</span>
+                  <span>평균 평점: {cat.avgRating.toFixed(1)}</span>
+                  <span>🏆 {cat.topAgent}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Legend */}
+          <div className="mt-6 p-4 bg-black/20 rounded-lg border border-border/20">
+            <h4 className="text-xs font-mono text-text-secondary uppercase mb-2">Gap Score 산출 공식</h4>
+            <p className="text-xs font-mono text-text-primary leading-relaxed">
+              Gap Score = (수요 지수 / 경쟁 지수) × 성공률 보너스<br/>
+              <span className="text-text-secondary">수요 지수: 바이어 밀도 + 에이전트당 수익 (글로벌 평균 대비)</span><br/>
+              <span className="text-text-secondary">경쟁 지수: 카테고리 내 에이전트 수 비율</span><br/>
+              <span className="text-text-secondary">성공률 보너스: 50%↑ = ×1.2, 30~50% = ×1.0, 30%↓ = ×0.8</span>
+            </p>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
 export default function InsightsPage() {
   return (
     <main>
@@ -298,9 +507,11 @@ export default function InsightsPage() {
           </span>
         </h1>
         <p className="text-text-secondary text-sm font-mono mt-2 ml-12">
-          Claude Sonnet이 에이전트 생태계를 분석하고 새로운 기회를 발견합니다
+          정량 데이터 분석 + AI가 에이전트 생태계의 기회를 발견합니다
         </p>
       </div>
+
+      <GapScoreSection />
 
       <AnalysisSection
         title="생태계 분석"
