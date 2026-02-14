@@ -6,13 +6,13 @@ const DUNE_BASE = "https://api.dune.com/api/v1";
 
 async function duneExecute(sql: string): Promise<any[]> {
   // 1. Execute
-  const execRes = await fetch(`${DUNE_BASE}/query/execute/sql`, {
+  const execRes = await fetch(`${DUNE_BASE}/sql/execute`, {
     method: "POST",
     headers: {
       "X-DUNE-API-KEY": DUNE_API_KEY!,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ query_sql: sql, performance: "medium" }),
+    body: JSON.stringify({ query_sql: sql }),
   });
   const execJson = await execRes.json();
   if (!execRes.ok) throw new Error(execJson.error ?? `Dune exec failed (${execRes.status})`);
@@ -26,14 +26,14 @@ async function duneExecute(sql: string): Promise<any[]> {
       headers: { "X-DUNE-API-KEY": DUNE_API_KEY! },
     });
     const statusJson = await statusRes.json();
-    if (statusJson.state === "QUERY_STATE_COMPLETED") {
+    if (statusJson.state === "QUERY_STATE_COMPLETED" || statusJson.is_execution_finished) {
       const resultRes = await fetch(`${DUNE_BASE}/execution/${executionId}/results`, {
         headers: { "X-DUNE-API-KEY": DUNE_API_KEY! },
       });
       const resultJson = await resultRes.json();
       return resultJson.result?.rows ?? [];
     }
-    if (statusJson.state === "QUERY_STATE_FAILED") {
+    if (statusJson.state === "QUERY_STATE_FAILED" || statusJson.error) {
       throw new Error(statusJson.error ?? "Query failed");
     }
   }
