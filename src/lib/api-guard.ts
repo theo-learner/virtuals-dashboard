@@ -72,7 +72,6 @@ interface GuardConfig {
 const ENDPOINT_CONFIGS: Record<string, GuardConfig> = {
   analyze: { ratePerMinute: 3, dailyBudget: 200, maxBodySize: 1024 },
   translate: { ratePerMinute: 10, dailyBudget: 500, maxBodySize: 5120 },
-  onchain: { ratePerMinute: 3, dailyBudget: 100 },
   "gap-score": { ratePerMinute: 5, dailyBudget: 300 },
 };
 
