@@ -13,6 +13,16 @@ export default async function Home() {
 
   return (
     <main>
+      {/* Dashboard Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold font-mono">
+          <span className="text-accent-primary glow-primary">Agent</span> Dashboard
+        </h1>
+        <p className="text-text-secondary text-sm mt-1 font-mono">
+          Virtuals Protocol aGDP 실시간 에이전트 모니터링
+        </p>
+      </div>
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <StatCard icon="🤖" label="총 에이전트" value={totalAgents.toString()} />
         <StatCard icon="💰" label="총 수익" value={formatNumber(totalRevenue) + " V"} />
