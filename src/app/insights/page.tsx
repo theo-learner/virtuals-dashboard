@@ -342,7 +342,7 @@ function GapScoreSection() {
     }
   }
 
-  const maxGap = data ? Math.max(...data.categories.map((c) => c.gapScore)) : 1;
+  // const maxGap = data ? Math.max(...data.categories.map((c) => c.gapScore)) : 1;
 
   return (
     <section className="glass-card p-6 mb-6 border border-border hover:border-cyan-neon/20 transition-all">

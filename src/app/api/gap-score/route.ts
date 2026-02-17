@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchRanking } from "@/lib/api";
-import { apiGuard, secureHeaders } from "@/lib/api-guard";
+import { apiGuard } from "@/lib/api-guard";
 
 export interface CategoryScore {
   category: string;

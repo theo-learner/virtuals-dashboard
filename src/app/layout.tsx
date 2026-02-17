@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { ClientErrorBoundary } from "@/components/ClientErrorBoundary";
 
 export const metadata: Metadata = {
   title: "버추얼스 프로토콜 대시보드",
@@ -17,7 +18,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto">
         <Navbar />
-        {children}
+        <ClientErrorBoundary>
+          {children}
+        </ClientErrorBoundary>
       </body>
     </html>
   );

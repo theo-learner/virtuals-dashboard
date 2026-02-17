@@ -2,7 +2,7 @@
 
 import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip,
-  ScatterChart, Scatter, CartesianGrid, ResponsiveContainer, Legend,
+  ScatterChart, Scatter, CartesianGrid, ResponsiveContainer,
 } from "recharts";
 import type { RankingAgent } from "@/lib/api";
 
