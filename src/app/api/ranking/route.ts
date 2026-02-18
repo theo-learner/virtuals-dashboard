@@ -6,5 +6,9 @@ export async function GET() {
     { next: { revalidate: 3600 } }
   );
   const json = await res.json();
-  return NextResponse.json(json.data ?? []);
+  return NextResponse.json(json.data ?? [], {
+    headers: {
+      "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+    },
+  });
 }

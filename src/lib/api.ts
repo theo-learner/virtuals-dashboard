@@ -34,7 +34,7 @@ export interface VirtualAgent {
 export async function fetchRanking(): Promise<RankingAgent[]> {
   const res = await fetch(
     "https://api.virtuals.io/api/agdp-leaderboard-epochs/1/ranking?pagination[pageSize]=1000",
-    { cache: "no-store" }
+    { next: { revalidate: 300 } }  // 5min stale-while-revalidate
   );
   const json = await res.json();
   return json.data ?? [];
