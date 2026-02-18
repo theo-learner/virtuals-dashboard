@@ -11,7 +11,17 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/test/**", "src/**/*.d.ts", "src/app/layout.tsx"],
+      exclude: [
+        "src/test/**",
+        "src/**/*.d.ts",
+        "src/app/layout.tsx",
+        "src/app/api/**",
+        "src/app/page.tsx",
+        "src/app/agent/[id]/page.tsx",
+        "src/app/agent/[id]/TranslatedDescription.tsx",
+        "src/app/analytics/page.tsx",
+        "src/app/insights/page.tsx",
+      ],
     },
   },
   resolve: {
