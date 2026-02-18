@@ -5,6 +5,7 @@ import {
   ScatterChart, Scatter, CartesianGrid, ResponsiveContainer,
 } from "recharts";
 import type { RankingAgent } from "@/lib/api";
+import { t } from "@/lib/i18n";
 
 const COLORS = ["#00FFD1", "#8B5CF6", "#F59E0B", "#EF4444", "#3B82F6", "#EC4899", "#10B981", "#F97316"];
 
@@ -15,7 +16,7 @@ export function CategoryPieChart({ agents }: { agents: RankingAgent[] }) {
 
   return (
     <div className="glass-card p-5">
-      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">카테고리 분포</h3>
+      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">{ t("chart.categoryDist") }</h3>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label={((props: Record<string, unknown>) => `${props.name ?? ""} ${(((props.percent as number) ?? 0) * 100).toFixed(0)}%`) as never} labelLine={false} fontSize={11}>
@@ -34,7 +35,7 @@ export function RevenueBarChart({ agents }: { agents: RankingAgent[] }) {
 
   return (
     <div className="glass-card p-5">
-      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">수익 상위 20</h3>
+      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">{ t("chart.topRevenue") }</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
@@ -57,7 +58,7 @@ export function SuccessRevenueScatter({ agents }: { agents: RankingAgent[] }) {
 
   return (
     <div className="glass-card p-5">
-      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">성공률 vs 수익</h3>
+      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">{ t("chart.successVsRevenue") }</h3>
       <ResponsiveContainer width="100%" height={300}>
         <ScatterChart>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
@@ -78,7 +79,7 @@ export function RoleDistribution({ agents }: { agents: RankingAgent[] }) {
 
   return (
     <div className="glass-card p-5">
-      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">역할 분포</h3>
+      <h3 className="text-sm font-mono text-text-secondary uppercase mb-4">{ t("chart.roleDist") }</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />

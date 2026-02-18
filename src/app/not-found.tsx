@@ -1,15 +1,16 @@
 import Link from "next/link";
+import { t } from "@/lib/i18n";
 
 export default function NotFound() {
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 text-center">
-      <h2 className="text-xl font-semibold">페이지를 찾을 수 없습니다</h2>
-      <p className="text-sm text-gray-500">요청하신 페이지가 존재하지 않습니다.</p>
+      <h2 className="text-xl font-semibold">{t("notFound.title")}</h2>
+      <p className="text-sm text-gray-500">{t("notFound.description")}</p>
       <Link
         href="/"
         className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
       >
-        홈으로 돌아가기
+        {t("common.home")}
       </Link>
     </div>
   );

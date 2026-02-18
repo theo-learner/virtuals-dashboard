@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { RankingAgent } from "@/lib/api";
 import { formatNumber, formatPercent } from "@/lib/format";
+import { t } from "@/lib/i18n";
 
 type SortKey = "totalRevenue" | "successRate" | "uniqueBuyerCount" | "rating";
 type ViewMode = "table" | "card";
@@ -90,7 +91,7 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
-              placeholder="에이전트 검색..."
+              placeholder={t("common.search")}
               className="w-full bg-black/30 border border-border rounded-xl pl-10 pr-3 py-2.5 text-sm font-mono focus:outline-none focus:border-accent-primary transition-colors"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -101,7 +102,7 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="">전체 카테고리</option>
+            <option value="">{t("common.allCategories")}</option>
             {categories.map((c) => <option key={c} value={c}>{categoryLabel(c)}</option>)}
           </select>
         </div>
@@ -109,7 +110,7 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
         {/* Pill filters + view toggle */}
         <div className="flex items-center justify-between">
           <div className="flex gap-2 flex-wrap">
-            {pillBtn(showAll ? "수익 > 0" : "전체", true, () => setShowAll(!showAll))}
+            {pillBtn(showAll ? t("common.revenuePositive") : t("common.all"), true, () => setShowAll(!showAll))}
           </div>
           <div className="flex gap-1 bg-black/30 rounded-xl p-1 border border-border">
             <button
@@ -132,12 +133,12 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
           <table className="w-full text-sm font-mono">
             <thead className="text-text-secondary text-xs uppercase border-b border-border">
               <tr>
-                <th className="px-3 py-2 text-left">순위</th>
-                <th className="px-3 py-2 text-left">에이전트</th>
-                {hdr("수익", "totalRevenue")}
-                {hdr("성공률", "successRate")}
-                {hdr("바이어", "uniqueBuyerCount")}
-                {hdr("평점", "rating")}
+                <th className="px-3 py-2 text-left">{t("table.rank")}</th>
+                <th className="px-3 py-2 text-left">{t("table.agent")}</th>
+                {hdr(t("table.revenue"), "totalRevenue")}
+                {hdr(t("table.successRate"), "successRate")}
+                {hdr(t("table.buyers"), "uniqueBuyerCount")}
+                {hdr(t("table.rating"), "rating")}
               </tr>
             </thead>
             <tbody>
@@ -210,12 +211,12 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
             className="px-4 py-1.5 rounded-xl border border-border hover:border-accent-primary hover:text-accent-primary disabled:opacity-30 disabled:cursor-not-allowed transition-all"
             disabled={page === 0}
             onClick={() => setPage(page - 1)}
-          >이전</button>
+          >{t("common.prev")}</button>
           <button
             className="px-4 py-1.5 rounded-xl border border-border hover:border-accent-primary hover:text-accent-primary disabled:opacity-30 disabled:cursor-not-allowed transition-all"
             disabled={page >= totalPages - 1}
             onClick={() => setPage(page + 1)}
-          >다음</button>
+          >{t("common.next")}</button>
         </div>
       </div>
     </div>

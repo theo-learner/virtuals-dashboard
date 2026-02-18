@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { t } from "@/lib/i18n";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -16,9 +17,9 @@ export default function Navbar() {
 
       {/* Desktop nav */}
       <div className="hidden sm:flex gap-6 text-sm font-mono">
-        <Link href="/" className="hover:text-accent-primary transition-colors">대시보드</Link>
-        <Link href="/analytics" className="hover:text-accent-primary transition-colors">분석</Link>
-        <Link href="/insights" className="hover:text-accent-primary transition-colors">인사이트</Link>
+        <Link href="/" className="hover:text-accent-primary transition-colors">{t("nav.dashboard")}</Link>
+        <Link href="/analytics" className="hover:text-accent-primary transition-colors">{t("nav.analytics")}</Link>
+        <Link href="/insights" className="hover:text-accent-primary transition-colors">{t("nav.insights")}</Link>
       </div>
 
       {/* Mobile hamburger */}
@@ -37,9 +38,9 @@ export default function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="absolute top-full left-0 right-0 mt-2 glass-card p-4 flex flex-col gap-3 text-sm font-mono sm:hidden z-50">
-          <Link href="/" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>대시보드</Link>
-          <Link href="/analytics" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>분석</Link>
-          <Link href="/insights" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>인사이트</Link>
+          <Link href="/" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>{t("nav.dashboard")}</Link>
+          <Link href="/analytics" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>{t("nav.analytics")}</Link>
+          <Link href="/insights" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>{t("nav.insights")}</Link>
         </div>
       )}
     </nav>
