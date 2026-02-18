@@ -1,0 +1,24 @@
+[0218/193100.958:ERROR:third_party\crashpad\crashpad\util\file\file_io_win.cc:202] LockFileEx: 잘못된 기능입니다. (0x1)
+[0218/193100.961:ERROR:third_party\crashpad\crashpad\util\file\file_io_win.cc:202] LockFileEx: 잘못된 기능입니다. (0x1)
+[0218/193100.962:ERROR:third_party\crashpad\crashpad\util\file\file_io_win.cc:202] LockFileEx: 잘못된 기능입니다. (0x1)
+[0218/193100.965:ERROR:third_party\crashpad\crashpad\util\file\file_io_win.cc:202] LockFileEx: 잘못된 기능입니다. (0x1)
+[6672:14744:0218/193101.105:ERROR:components\segmentation_platform\internal\database\ukm_database_backend.cc:148] Failed to open UKM database: 0 database is locked
+
+DevTools listening on ws://127.0.0.1:36655/devtools/browser/66b25b69-14fc-4353-b98c-989bdc679d50
+[6672:10036:0218/193101.137:ERROR:content\browser\network_sandbox.cc:384] Failed to grant sandbox access to cache directory \\wsl.localhost\Ubuntu-24.04\home\theo\virtuals-dashboard\undefined\Users\undefined\AppData\Local\lighthouse.23819303\Default\Cache\Cache_Data: 잘못된 기능입니다. (0x1)
+[6672:10036:0218/193101.148:ERROR:content\browser\network_sandbox.cc:317] Failed to grant sandbox access to NoVarySearch directory \\wsl.localhost\Ubuntu-24.04\home\theo\virtuals-dashboard\undefined\Users\undefined\AppData\Local\lighthouse.23819303\Default\Cache\No_Vary_Search: 잘못된 기능입니다. (0x1)
+[6672:17320:0218/193101.150:ERROR:components\password_manager\core\browser\password_store\login_database.cc:1141] Unable to open the password store database.
+[6672:17320:0218/193101.150:ERROR:components\password_manager\core\browser\password_store\login_database_async_helper.cc:79] Could not create/open login database.
+[6672:10792:0218/193101.150:ERROR:components\password_manager\core\browser\password_store\login_database.cc:1141] Unable to open the password store database.
+[6672:10792:0218/193101.150:ERROR:components\password_manager\core\browser\password_store\login_database_async_helper.cc:79] Could not create/open login database.
+[6672:6564:0218/193101.163:ERROR:content\browser\network_sandbox.cc:489] Failed to grant sandbox access to network context data directory \\wsl.localhost\Ubuntu-24.04\home\theo\virtuals-dashboard\undefined\Users\undefined\AppData\Local\lighthouse.23819303\Default\Safe Browsing Network: 잘못된 기능입니다. (0x1)
+[6672:10036:0218/193101.164:ERROR:content\browser\network_sandbox.cc:317] Failed to grant sandbox access to SharedDictionary directory \\wsl.localhost\Ubuntu-24.04\home\theo\virtuals-dashboard\undefined\Users\undefined\AppData\Local\lighthouse.23819303\Default\Shared Dictionary: 잘못된 기능입니다. (0x1)
+[6672:10036:0218/193101.179:ERROR:content\browser\network_sandbox.cc:489] Failed to grant sandbox access to network context data directory \\wsl.localhost\Ubuntu-24.04\home\theo\virtuals-dashboard\undefined\Users\undefined\AppData\Local\lighthouse.23819303\Default\Network: 잘못된 기능입니다. (0x1)
+[6672:17064:0218/193101.221:ERROR:content\browser\network_service_instance_impl.cc:243] Encountered error while migrating network context data or granting sandbox access for \\wsl.localhost\Ubuntu-24.04\home\theo\virtuals-dashboard\undefined\Users\undefined\AppData\Local\lighthouse.23819303\Default\Safe Browsing Network. Result: 6: 작업을 완료했습니다. (0x0)
+[6672:17064:0218/193101.232:ERROR:content\browser\network_service_instance_impl.cc:243] Encountered error while migrating network context data or granting sandbox access for \\wsl.localhost\Ubuntu-24.04\home\theo\virtuals-dashboard\undefined\Users\undefined\AppData\Local\lighthouse.23819303\Default\Network. Result: 6: 작업을 완료했습니다. (0x0)
+[6672:6564:0218/193101.273:ERROR:components\history\core\browser\top_sites_backend.cc:78] Failed to initialize database.
+[6672:6400:0218/193110.018:ERROR:google_apis\gcm\engine\gcm_store_impl.cc:321] Failed to open database \\wsl.localhost\Ubuntu-24.04\home\theo\virtuals-dashboard\undefined\Users\undefined\AppData\Local\lighthouse.23819303\Default\GCM Store: IO error: \\wsl.localhost\Ubuntu-24.04\home\theo\virtuals-dashboard\undefined\Users\undefined\AppData\Local\lighthouse.23819303\Default\GCM Store/LOCK: No further details. (ChromeMethodBFE: 15::LockFile::1)
+[6672:6400:0218/193111.040:ERROR:google_apis\gcm\engine\gcm_store_impl.cc:418] Destroy failed: IO error: \\wsl.localhost\Ubuntu-24.04\home\theo\virtuals-dashboard\undefined\Users\undefined\AppData\Local\lighthouse.23819303\Default\GCM Store/LOCK: No further details. (ChromeMethodBFE: 15::LockFile::1)
+[6672:16268:0218/193111.041:ERROR:components\gcm_driver\gcm_client_impl.cc:759] Failed to reset GCM store
+[6672:17064:0218/193501.856:ERROR:components\device_event_log\device_event_log_impl.cc:198] [19:35:01.851] FIDO: enclave_manager.cc:4282 Failed to write enclave state
+[6672:17064:0218/203320.174:ERROR:components\device_event_log\device_event_log_impl.cc:198] [20:33:20.174] USB: usb_service_win.cc:105 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: 요소가 없습니다. (0x490)
