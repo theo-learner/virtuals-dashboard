@@ -3,6 +3,7 @@ import { fetchRanking, fetchAgentDetail } from "@/lib/api";
 import { formatNumber, formatPercent } from "@/lib/format";
 import { t } from "@/lib/i18n";
 import Link from "next/link";
+import Image from "next/image";
 import { CopyButton } from "./CopyButton";
 import { TranslatedDescription } from "./TranslatedDescription";
 
@@ -117,7 +118,7 @@ export default async function AgentPage({ params }: { params: Promise<{ id: stri
       {/* Header */}
       <div className="glass-card p-6 mb-6 flex flex-col sm:flex-row items-start gap-6">
         {profilePic && (
-          <img src={profilePic} alt={name} className="w-20 h-20 rounded-xl border border-border flex-shrink-0" />
+          <Image src={profilePic} alt={name} width={80} height={80} className="w-20 h-20 rounded-xl border border-border flex-shrink-0" priority />
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-1 flex-wrap">
@@ -270,7 +271,7 @@ export default async function AgentPage({ params }: { params: Promise<{ id: stri
           <div className="glass-card p-4 mb-6">
             <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="block">
               {videoThumb ? (
-                <img src={videoThumb} alt="Video pitch" className="w-full max-w-md rounded-lg border border-border" />
+                <Image src={videoThumb} alt="Video pitch" width={448} height={252} className="w-full max-w-md rounded-lg border border-border" loading="lazy" />
               ) : (
                 <span className="text-cyan-neon font-mono text-sm hover:underline"> {t("agent.watchVideo")}</span>
               )}

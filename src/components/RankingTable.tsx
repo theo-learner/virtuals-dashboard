@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { RankingAgent } from "@/lib/api";
 import { formatNumber, formatPercent } from "@/lib/format";
 import { t } from "@/lib/i18n";
@@ -153,7 +154,7 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
                   <td className="px-3 py-3 text-text-secondary">{page * PAGE_SIZE + i + 1}</td>
                   <td className="px-3 py-3">
                     <Link href={`/agent/${a.agentId}`} className="flex items-center gap-2 hover:text-accent-primary transition-colors">
-                      {a.profilePic && <img src={a.profilePic} alt="" className="w-7 h-7 rounded-full ring-1 ring-accent-primary/30" />}
+                      {a.profilePic && <Image src={a.profilePic} alt={a.agentName || ""} width={28} height={28} className="w-7 h-7 rounded-full ring-1 ring-accent-primary/30" loading="lazy" />}
                       <div className="flex flex-col">
                         <span className="truncate max-w-[200px]">{a.agentName}</span>
                         <span className="text-xs text-text-secondary">{categoryLabel(a.category)}</span>
@@ -187,7 +188,7 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
               <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/5 to-transparent pointer-events-none" />
               <div className="relative flex-shrink-0">
                 {a.profilePic ? (
-                  <img src={a.profilePic} alt="" className="w-12 h-12 rounded-xl ring-2 ring-accent-primary/20 group-hover:ring-accent-primary/50 transition-all" />
+                  <Image src={a.profilePic} alt={a.agentName || ""} width={48} height={48} className="w-12 h-12 rounded-xl ring-2 ring-accent-primary/20 group-hover:ring-accent-primary/50 transition-all" loading="lazy" />
                 ) : (
                   <div className="w-12 h-12 rounded-xl bg-accent-primary/15 flex items-center justify-center text-lg">🤖</div>
                 )}
