@@ -38,8 +38,7 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function AddressRow({ label, address }: { label: string; address: any }) {
+function AddressRow({ label, address }: { label: string; address: string }) {
   if (!address) return null;
   return (
     <div className="flex items-center justify-between py-2 border-b border-border/30 last:border-0">
@@ -66,7 +65,7 @@ export default async function AgentPage({ params }: { params: Promise<{ id: stri
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let detail: any = null;
   if (agent.virtualAgentId) {
     detail = await fetchAgentDetail(agent.virtualAgentId);
