@@ -12,7 +12,7 @@ export default async function Home() {
   const totalBuyers = agents.reduce((s, a) => s + (a.uniqueBuyerCount ?? 0), 0);
 
   return (
-    <main>
+    <main id="main-content">
       {/* Dashboard Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-mono">

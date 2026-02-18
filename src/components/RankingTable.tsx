@@ -87,11 +87,12 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
       <div className="flex flex-col gap-3 mb-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
               placeholder={t("common.search")}
+              aria-label={t("common.search")}
               className="w-full bg-black/30 border border-border rounded-xl pl-10 pr-3 py-2.5 text-sm font-mono focus:outline-none focus:border-accent-primary transition-colors"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -101,6 +102,7 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
             className="bg-black/30 border border-border rounded-xl px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-accent-primary transition-colors"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
+            aria-label={t("common.allCategories")}
           >
             <option value="">{t("common.allCategories")}</option>
             {categories.map((c) => <option key={c} value={c}>{categoryLabel(c)}</option>)}
@@ -117,11 +119,15 @@ export default function RankingTable({ agents }: { agents: RankingAgent[] }) {
               className={`px-3 py-1.5 text-xs font-mono rounded-lg transition-all ${viewMode === "table" ? "bg-accent-primary/20 text-accent-primary" : "text-text-secondary hover:text-text-primary"}`}
               onClick={() => setViewMode("table")}
               title="테이블 뷰"
+              aria-label="Table view"
+              aria-pressed={viewMode === "table"}
             >☰</button>
             <button
               className={`px-3 py-1.5 text-xs font-mono rounded-lg transition-all ${viewMode === "card" ? "bg-accent-primary/20 text-accent-primary" : "text-text-secondary hover:text-text-primary"}`}
               onClick={() => setViewMode("card")}
               title="카드 뷰"
+              aria-label="Card view"
+              aria-pressed={viewMode === "card"}
             >⊞</button>
           </div>
         </div>

@@ -11,7 +11,7 @@ export default function Navbar() {
   useLocale(); // subscribe to locale changes for re-render
 
   return (
-    <nav className="glass-card mb-6 px-6 py-4 flex items-center justify-between relative">
+    <nav className="glass-card mb-6 px-6 py-4 flex items-center justify-between relative" aria-label="Main navigation">
       <Link href="/" className="text-xl font-bold font-mono flex items-center gap-2">
         <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-accent-primary/20 text-accent-primary text-sm">⬡</span>
         <span className="text-accent-primary glow-primary">VIRTUALS</span>
@@ -30,8 +30,10 @@ export default function Navbar() {
       <button
         className="sm:hidden text-text-secondary hover:text-accent-primary transition-colors"
         onClick={() => setMenuOpen(!menuOpen)}
+        aria-label={menuOpen ? "Close menu" : "Open menu"}
+        aria-expanded={menuOpen}
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-6 h-6" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           {menuOpen
             ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
