@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { t } from "@/lib/i18n";
+import { useLocale } from "@/lib/LocaleContext";
+import LocaleSwitcher from "./LocaleSwitcher";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  useLocale(); // subscribe to locale changes for re-render
 
   return (
     <nav className="glass-card mb-6 px-6 py-4 flex items-center justify-between relative">
@@ -16,10 +19,11 @@ export default function Navbar() {
       </Link>
 
       {/* Desktop nav */}
-      <div className="hidden sm:flex gap-6 text-sm font-mono">
+      <div className="hidden sm:flex gap-6 text-sm font-mono items-center">
         <Link href="/" className="hover:text-accent-primary transition-colors">{t("nav.dashboard")}</Link>
         <Link href="/analytics" className="hover:text-accent-primary transition-colors">{t("nav.analytics")}</Link>
         <Link href="/insights" className="hover:text-accent-primary transition-colors">{t("nav.insights")}</Link>
+        <LocaleSwitcher />
       </div>
 
       {/* Mobile hamburger */}
@@ -41,6 +45,7 @@ export default function Navbar() {
           <Link href="/" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>{t("nav.dashboard")}</Link>
           <Link href="/analytics" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>{t("nav.analytics")}</Link>
           <Link href="/insights" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>{t("nav.insights")}</Link>
+          <LocaleSwitcher />
         </div>
       )}
     </nav>
