@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { fetchRanking, fetchAgentDetail } from "@/lib/api";
 import { formatNumber, formatPercent } from "@/lib/format";
 import { t } from "@/lib/i18n";
@@ -50,6 +51,21 @@ function AddressRow({ label, address }: { label: string; address: string }) {
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const ranking = await fetchRanking();
+  const agent = ranking.find((a) => String(a.agentId) === id);
+  const name = agent?.agentName ?? "Agent";
+  return {
+    title: name,
+    description: `${name} - Virtuals Protocol AI agent details, revenue & performance metrics.`,
+    openGraph: {
+      title: `${name} | Virtuals Dashboard`,
+      description: `View ${name}'s ranking, revenue, success rate and market data.`,
+    },
+  };
 }
 
 export default async function AgentPage({ params }: { params: Promise<{ id: string }> }) {
