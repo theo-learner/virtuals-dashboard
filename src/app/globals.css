@@ -18,6 +18,16 @@
   --font-mono: "JetBrains Mono", monospace;
 }
 
+html.light {
+  --color-bg-primary: #F8FAFC;
+  --color-bg-secondary: #E2E8F0;
+  --color-bg-card: rgba(255, 255, 255, 0.9);
+  --color-bg-card-hover: rgba(248, 250, 252, 1);
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-border: rgba(139, 92, 246, 0.2);
+}
+
 body {
   background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 50%, var(--color-bg-primary) 100%);
   background-attachment: fixed;

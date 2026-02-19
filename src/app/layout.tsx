@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { ClientErrorBoundary } from "@/components/ClientErrorBoundary";
 import { LocaleProvider } from "@/lib/LocaleContext";
+import { ThemeProvider } from "@/lib/ThemeContext";
 
 export const metadata: Metadata = {
   title: {
@@ -64,12 +65,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-accent-primary focus:text-white focus:px-4 focus:py-2 focus:rounded">Skip to content</a>
+        <ThemeProvider>
         <LocaleProvider>
           <Navbar />
           <ClientErrorBoundary>
             {children}
           </ClientErrorBoundary>
         </LocaleProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

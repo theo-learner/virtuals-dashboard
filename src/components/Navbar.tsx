@@ -5,6 +5,7 @@ import { useState } from "react";
 import { t } from "@/lib/i18n";
 import { useLocale } from "@/lib/LocaleContext";
 import LocaleSwitcher from "./LocaleSwitcher";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -23,6 +24,7 @@ export default function Navbar() {
         <Link href="/" className="hover:text-accent-primary transition-colors">{t("nav.dashboard")}</Link>
         <Link href="/analytics" className="hover:text-accent-primary transition-colors">{t("nav.analytics")}</Link>
         <Link href="/insights" className="hover:text-accent-primary transition-colors">{t("nav.insights")}</Link>
+        <ThemeToggle />
         <LocaleSwitcher />
       </div>
 
@@ -47,7 +49,10 @@ export default function Navbar() {
           <Link href="/" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>{t("nav.dashboard")}</Link>
           <Link href="/analytics" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>{t("nav.analytics")}</Link>
           <Link href="/insights" className="hover:text-accent-primary transition-colors py-1" onClick={() => setMenuOpen(false)}>{t("nav.insights")}</Link>
-          <LocaleSwitcher />
+          <div className="flex gap-2">
+            <ThemeToggle />
+            <LocaleSwitcher />
+          </div>
         </div>
       )}
     </nav>
