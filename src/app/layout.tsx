@@ -48,6 +48,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Virtuals Protocol aGDP Dashboard",
+              "url": "https://virtuals-dashboard.vercel.app",
+              "description": "Real-time AI agent rankings, revenue analytics & insights for the Virtuals Protocol ecosystem.",
+              "applicationCategory": "FinanceApplication",
+              "operatingSystem": "Web",
+              "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            }),
+          }}
+        />
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-accent-primary focus:text-white focus:px-4 focus:py-2 focus:rounded">Skip to content</a>
         <LocaleProvider>
           <Navbar />

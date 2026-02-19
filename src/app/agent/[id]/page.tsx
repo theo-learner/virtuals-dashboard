@@ -111,8 +111,19 @@ export default async function AgentPage({ params }: { params: Promise<{ id: stri
   const videoThumb = detail?.socials?.VIDEO_PITCH?.THUMBNAIL_URL;
   const profilePic = detail?.image?.url || agent.profilePic;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": name,
+    "description": description ?? `${name} - Virtuals Protocol AI Agent`,
+    "url": `https://virtuals-dashboard.vercel.app/agent/${id}`,
+    "applicationCategory": "AI Agent",
+    "aggregateRating": agent.rating ? { "@type": "AggregateRating", "ratingValue": agent.rating.toFixed(1), "bestRating": "5" } : undefined,
+  };
+
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Link href="/" className="text-cyan-neon font-mono text-sm mb-6 inline-block hover:underline"> {t("agent.backDashboard")}</Link>
 
       {/* Header */}
